@@ -13,7 +13,7 @@ $ cd rtranslate
 ```
 ### Insert the token
 Replace your token with your real token generated on discord.dev
-
+```bash
 # Install dependencies
 $ npm install @iamtraction/google-translate discord.js discord-reply
 
