@@ -68,5 +68,5 @@ client.on('message', message => {
 
 
 
-client.login(require("./token.json").token);
+client.login("your token");
 
