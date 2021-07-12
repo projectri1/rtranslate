@@ -10,6 +10,9 @@ $ git clone https://github.com/riensurgithub/rtranslate
 
 # Go into the repository
 $ cd rtranslate
+```
+### Insert the token
+Replace your token with your real token generated on discord.dev
 
 # Install dependencies
 $ npm install @iamtraction/google-translate discord.js discord-reply
