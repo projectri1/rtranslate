@@ -20,3 +20,11 @@ $ npm install @iamtraction/google-translate discord.js discord-reply
 # Run the bot
 $ npm test
 ```
+# Licence
+The bot has licenced with the MIT liscence
+
+# Special Thanks
+Thanks to :
+- [Hanro50](https://github.com/Hanro50) for adding reply
+- [me (ri1_)](https://github.com/riensurgithub) for initial bot
+- [iamtraction](https://github.com/iamtraction) for his [npm package](https://github.com/iamtraction/google-translate)
