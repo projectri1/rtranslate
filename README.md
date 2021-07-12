@@ -2,6 +2,7 @@
 ### a Discord Translation Bot using google translate api
 
 ![Logo](https://cdn.discordapp.com/avatars/861892444253585429/2115a05b0c9f0b35b4646aebe0cd7326.webp)
+![Screenshot](https://cdn.discordapp.com/attachments/863865958367363114/864060710018613248/unknown.png)
 
 ## Install
 ```bash
