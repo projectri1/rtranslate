@@ -12,7 +12,7 @@ $ git clone https://github.com/riensurgithub/rtranslate
 $ cd rtranslate
 
 # Install dependencies
-$ npm install
+$ npm install @iamtraction/google-translate discord.js discord-reply
 
 # Run the bot
 $ npm test
