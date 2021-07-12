@@ -69,5 +69,5 @@ client.on('message', message => {
 
 
 
-client.login("your token");
+client.login(token);
 
