@@ -1,2 +1,2 @@
-# rtranslate
-Discord Translate Bot using google translate api
+# RTranslate
+## a Discord Translation Bot using google translate api
