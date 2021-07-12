@@ -3,6 +3,7 @@ require('discord-reply'); //⚠️ IMPORTANT: put this before your discord.Clien
 const client = new Discord.Client();
 const translate = require('@iamtraction/google-translate');
 const prefix = '?'; // just an example, change to whatever you want
+const token = "your token"; //replace your token with your real token (discord.dev)
 
 const activities = [
 	"with translated stuff",
