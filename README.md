@@ -26,4 +26,4 @@ The bot has licenced with the MIT liscence
 Thanks to :
 - [Hanro50](https://github.com/Hanro50) for adding reply
 - [me (ri1_)](https://github.com/riensurgithub) for initial bot
-- [iamtraction](https://github.com/iamtraction) for his [npm package](https://github.com/iamtraction/google-translate)
+- [Vitaliy Potapov](https://github.com/vitalets) for his [npm package](https://github.com/vitalets/google-translate-api)
