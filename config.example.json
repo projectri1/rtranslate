@@ -6,5 +6,6 @@
         "translating": "⌛ Translating...",
         "limit_reached": "⚠ Transactional limit reached. Translate will be down for a minute."
     },
+    "translate_to": "en",
     "token": "-- YOUR DISCORD BOT TOKEN --"
 }
