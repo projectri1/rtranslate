@@ -64,21 +64,21 @@ async function messageCreate(message) {
             console.log("[Message " + message.id + "] Getting translated...");
             const res = await translate(content, { to: targetLanguage });
 
-            if (
-                doNotTranslate.includes(displayNames.of(res.from.language.iso).toLowerCase()) ||
-                res.text.toLocaleLowerCase() == content.toLocaleLowerCase()
-            ) {
-                await reply.delete();
-                return;
-            }
-
-            const word = filter.clean(res.text);
-            if (word.replace(/\\\*/g, "").trim().length < 1) {
-                await reply.delete();
-                return;
-            }
-
             await reply.then(async (replyMessage) => {
+                if (
+                    doNotTranslate.includes(displayNames.of(res.from.language.iso).toLowerCase()) ||
+                    res.text.toLocaleLowerCase() == content.toLocaleLowerCase()
+                ) {
+                    await replyMessage.delete();
+                    return;
+                }
+
+                const word = filter.clean(res.text);
+                if (word.replace(/\\\*/g, "").trim().length < 1) {
+                    await replyMessage.delete();
+                    return;
+                }
+
                 const translatedMessage = JSON.parse(JSON.stringify(defaultEmbed));
                 translatedMessage.description = word;
                 translatedMessage.footer.text +=
