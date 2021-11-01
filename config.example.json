@@ -1,8 +1,6 @@
 {
-    "prefix": "?",
+    "do_not_translate": ["english"],
     "activities": ["with translated stuff", "with languages", "with 1s and 0s"],
-    "message": {
-        "bot_name": "rTranslate"
-    },
+    "message_color": 5199026,
     "token": "-- YOUR DISCORD BOT TOKEN --"
 }
