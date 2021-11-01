@@ -1,58 +1,130 @@
 const Discord = require("discord.js");
+const Queue = require("./src/Queue");
 const translate = require("@vitalets/google-translate-api");
-const Queue = require("./src/queue");
-
 const LanguageDetect = new (require("languagedetect"))();
 const filter = new (require("bad-words"))({ placeHolder: "\\*" });
 
 const config = require("./config.json");
 const token = config.token;
-const prefix = config.prefix;
 const activities = config.activities;
+const doNotTranslate = config.do_not_translate;
+const targetLanguage = config.translate_to;
+const messages = config.messages;
+const queue = new Queue();
+const displayNames = new Intl.DisplayNames(["en"], { type: "language" });
+const displayNamesTargetLanguage = new Intl.DisplayNames([targetLanguage], { type: "language" });
+
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILDS],
+    allowedMentions: {
+        repliedUser: false,
+    },
 });
-const queue = new Queue();
 
-/**
- *
- * @param {Discord.Message} message The message to be translated
- * @param {string} content The parsed message content
- */
-function translateMessage(message, content) {
-    queue.add(async () => {
-        try {
-            console.log("[Message " + message.id + "] Message is being translated...");
+const defaultEmbed = {
+    color: config.message_color,
+    footer: {
+        icon_url: "https://imgur.com/VOjELQf.png",
+        text: "Could not get bot name",
+    },
+    description: "Somehow no message was set to this message 😦",
+};
+const errorEmbed = Object.assign({}, defaultEmbed);
+errorEmbed.color = 15208739;
 
-            const reply = message.reply("⌛ Translating...");
-            const res = await translate(content, { to: "en" });
+async function messageCreate(message) {
+    if (message.author.bot || !message) return;
+
+    const content = message.cleanContent;
+    if (content.length < 6 || !content.includes(" ")) return;
+
+    const detectedLanguages = LanguageDetect.detect(content, 1);
+    if (
+        detectedLanguages.length > 0 &&
+        detectedLanguages[0].length > 0 &&
+        doNotTranslate.includes(detectedLanguages[0][0])
+    )
+        return;
+
+    try {
+        console.log("[Message " + message.id + "] Added to queue");
+
+        const translatingMessage = Object.assign({}, defaultEmbed);
+        translatingMessage.description = null;
+        translatingMessage["author"] = {
+            icon_url: "https://imgur.com/lRWffj0.png",
+            name: "Translating...",
+        };
+        const reply = message.reply(
+            { embeds: [translatingMessage] },
+            { allowedMentions: { repliedUser: false } }
+        );
+
+        queue.add(async () => {
+            console.log("[Message " + message.id + "] Getting translated...");
+            const res = await translate(content, { to: targetLanguage });
 
             if (
-                res.from.language.iso == "en" ||
+                doNotTranslate.includes(displayNames.of(res.from.language.iso).toLowerCase()) ||
                 res.text.toLocaleLowerCase() == content.toLocaleLowerCase()
-            )
+            ) {
+                await reply.delete();
                 return;
+            }
 
             const word = filter.clean(res.text);
-            if (word.replace(/\\\*/g, "").trim().length < 1) return;
+            if (word.replace(/\\\*/g, "").trim().length < 1) {
+                await reply.delete();
+                return;
+            }
 
             await reply.then(async (replyMessage) => {
-                await replyMessage.edit(word);
-                console.log("[Message " + message.id + "] Successfully translated message");
+                const translatedMessage = JSON.parse(JSON.stringify(defaultEmbed));
+                translatedMessage.description = word;
+                translatedMessage.footer.text +=
+                    " — " +
+                    displayNamesTargetLanguage.of(res.from.language.iso) +
+                    " › " +
+                    displayNamesTargetLanguage.of(targetLanguage);
+                await replyMessage.edit(
+                    { embeds: [translatedMessage] },
+                    { allowedMentions: { repliedUser: false } }
+                );
+                console.log(
+                    "[Message " +
+                        message.id +
+                        "] Successfully translated from " +
+                        displayNames.of(res.from.language.iso)
+                );
                 //await message.lineReplyNoMention(word);
             });
-        } catch (err) {
-            console.error(err);
-            message.lineReplyNoMention(
-                "Transactional limit reached. Translate will be down for a minute"
-            );
-            queue.timeout(1000 * 60);
-        }
-    });
+        });
+    } catch (err) {
+        console.error(err);
+        const errorMessage = Object.assign({}, errorEmbed);
+        errorMessage.description = messages.limit_reached;
+        message.reply(
+            { embeds: [errorMessage] },
+            {
+                allowedMentions: { repliedUser: false },
+            }
+        );
+        queue.timeout(1000 * 60);
+    }
 }
+
+client.on("messageCreate", messageCreate);
 
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
+    const image = client.user.avatar
+        ? client.user.avatar
+        : "https://cdn.discordapp.com/embed/avatars/0.png";
+    defaultEmbed.footer.text = client.user.username;
+    defaultEmbed.footer.icon_url = image;
+    errorEmbed.footer.text = client.user.username;
+    errorEmbed.footer.icon_url = image;
 
     function newAct() {
         // generate random number between 1 and list length.
@@ -68,61 +140,63 @@ client.on("ready", () => {
     }, 60000 * 30);
 });
 
-client.on("messageCreate", (message) => {
-    if (message.author.bot || message.author.id == client.user.id || !message) return;
+/*
+    client.on("messageCreate", (message) => {
+        if (message.author.bot || message.author.id == client.user.id || !message) return;
 
-    const mess = message.cleanContent;
+        const mess = message.cleanContent;
 
-    if (mess.length < 6 || !mess.includes(" ")) {
-        return;
-    } else if (!mess.startsWith(prefix)) {
-        const L = LanguageDetect.detect(mess, 1);
+        if (mess.length < 6 || !mess.includes(" ")) {
+            return;
+        } else if (!mess.startsWith(prefix)) {
+            const L = LanguageDetect.detect(mess, 1);
 
-        if (L.length > 0 && L[0].length > 0 && L[0][0] == "english") return;
+            if (L.length > 0 && L[0].length > 0 && L[0][0] == "english") return;
 
-        // Translate message
-        translateMessage(message, mess);
-    } else {
-        const args = mess.trim().split(/ +/g);
-        const cmd = args[0].slice(prefix.length).toLowerCase(); // case INsensitive, without prefix
-        args.shift();
-        if (cmd == "info") {
-            return message.lineReplyNoMention(
-                "Thanks you ri1_ for the code used in the translate bot!"
-            );
-        }
-        if (cmd == "help") {
-            return message.lineReplyNoMention(
-                prefix +
-                    "help: For this menu\n" +
+            // Translate message
+            translateMessage(message, mess);
+        } else {
+            const args = mess.trim().split(/ +/g);
+            const cmd = args[0].slice(prefix.length).toLowerCase(); // case INsensitive, without prefix
+            args.shift();
+            if (cmd == "info") {
+                return message.lineReplyNoMention(
+                    "Thanks you ri1_ for the code used in the translate bot!"
+                );
+            }
+            if (cmd == "help") {
+                return message.lineReplyNoMention(
                     prefix +
-                    "info: For info about the creator\n" +
-                    prefix +
-                    "detect: Let me see if I can determine this strange set of data?\n" +
-                    prefix +
-                    "[language code]: to have me translate your text into that language"
-            );
-        }
-        if (cmd == "detect") {
-            const r = LanguageDetect.detect(args.join(" "), 5);
-            var res = "Let's see what I think it is\n```\n";
+                        "help: For this menu\n" +
+                        prefix +
+                        "info: For info about the creator\n" +
+                        prefix +
+                        "detect: Let me see if I can determine this strange set of data?\n" +
+                        prefix +
+                        "[language code]: to have me translate your text into that language"
+                );
+            }
+            if (cmd == "detect") {
+                const r = LanguageDetect.detect(args.join(" "), 5);
+                var res = "Let's see what I think it is\n```\n";
 
-            r.forEach((L) => {
-                res += L[0] + ":" + Math.round(L[1] * 100.0) + "%\n";
-            });
-            res += "```";
-            return message.lineReplyNoMention(res);
+                r.forEach((L) => {
+                    res += L[0] + ":" + Math.round(L[1] * 100.0) + "%\n";
+                });
+                res += "```";
+                return message.lineReplyNoMention(res);
+            }
+            const output = mess.replace(prefix + cmd, "");
+            translate(output, { to: cmd })
+                .then((res) => {
+                    message.lineReplyNoMention(filter.clean(res.text)); // OUTPUT: You are amazing!
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
-        const output = mess.replace(prefix + cmd, "");
-        translate(output, { to: cmd })
-            .then((res) => {
-                message.lineReplyNoMention(filter.clean(res.text)); // OUTPUT: You are amazing!
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-});
+    });
+*/
 
 queue.start();
 client.login(token);
