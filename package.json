@@ -1,0 +1,17 @@
+{
+    "name": "rtranslate",
+    "version": "1.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "node index.js"
+    },
+    "author": "ri1_",
+    "license": "MIT",
+    "dependencies": {
+        "@vitalets/google-translate-api": "^7.0.0",
+        "bad-words": "^3.0.4",
+        "discord.js": "^13.3.0",
+        "languagedetect": "^2.0.0"
+    }
+}
