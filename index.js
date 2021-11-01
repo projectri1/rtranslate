@@ -1,7 +1,8 @@
 const Discord = require('discord.js');
 require('discord-reply'); //⚠️ IMPORTANT: put this before your discord.Client()
-const client = new Discord.Client();
 const translate = require('@vitalets/google-translate-api');
+
+const client = new Discord.Client();
 const LanguageDetect = new (require('languagedetect'))();
 
 const prefix = '?'; // just an example, change to whatever you want
