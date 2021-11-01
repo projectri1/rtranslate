@@ -1,6 +1,6 @@
 module.exports = class Queue {
     /** The delay in milliseconds between each interval callback */
-    intervalDelay = 1;
+    intervalDelay = 500;
     _queue = [];
 
     async _queueInterval() {
