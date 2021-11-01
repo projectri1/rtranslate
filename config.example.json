@@ -1,0 +1,8 @@
+{
+    "prefix": "?",
+    "activities": ["with translated stuff", "with languages", "with 1s and 0s"],
+    "message": {
+        "bot_name": "rTranslate"
+    },
+    "token": "-- YOUR DISCORD BOT TOKEN --"
+}
