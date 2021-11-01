@@ -1,14 +1,16 @@
 module.exports = class Queue {
+    /** The delay in milliseconds between each interval callback */
+    intervalDelay = 1;
     _queue = [];
 
     async _queueInterval() {
-        if (queue.length > 0) {
-            const element = queue[0];
+        if (this._queue.length > 0) {
+            const element = this._queue[0];
             await element[0](...element[1]);
-            queue.shift();
+            this._queue.shift();
         }
 
-        this._queueInterval();
+        setTimeout(() => this._queueInterval(), this.callDelay);
     }
 
     /**
