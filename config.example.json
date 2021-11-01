@@ -1,11 +1,11 @@
 {
     "do_not_translate": ["english"],
+    "translate_to": "en",
     "activities": ["with translated stuff", "with languages", "with 1s and 0s"],
     "message_color": 5199026,
     "messages": {
         "translating": "⌛ Translating...",
         "limit_reached": "⚠ Transactional limit reached. Translate will be down for a minute."
     },
-    "translate_to": "en",
     "token": "-- YOUR DISCORD BOT TOKEN --"
 }
