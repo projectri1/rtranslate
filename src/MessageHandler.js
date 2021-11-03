@@ -82,7 +82,7 @@ module.exports = {
         } catch (err) {
             console.error(err);
 
-            const errorMessage = EmbedBuilder.limitReached();
+            const errorMessage = EmbedBuilder.errorMessage();
             message.reply({ embeds: [errorMessage] });
 
             queue.timeout(1000 * 60);
