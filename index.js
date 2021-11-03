@@ -22,8 +22,8 @@ client.on("messageCreate", MessageHandler.messageCreate);
 client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    const clientIcon = client.user.avatar
-        ? client.user.avatar
+    const clientIcon = client.user.avatar_url
+        ? client.user.avatar_url
         : "https://cdn.discordapp.com/embed/avatars/0.png";
 
     EmbedBuilder.setDefault("footer", client.user.username);
