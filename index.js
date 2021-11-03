@@ -1,23 +1,42 @@
-const Discord = require('discord.js');
-require('discord-reply'); //⚠️ IMPORTANT: put this before your discord.Client()
-const client = new Discord.Client();
-const translate = require('@vitalets/google-translate-api');
-const LanguageDetect = new (require('languagedetect'))();
+const Discord = require("discord.js");
+const Queue = require("./src/Queue");
+const MessageHandler = require("./src/MessageHandler");
+const CommandHandler = require("./src/CommandHandler");
+const EmbedBuilder = require("./src/EmbedBuilder");
 
-const prefix = '?'; // just an example, change to whatever you want
+const config = require("./config.json");
+const token = config.token;
+const activities = config.activities;
+const testGuild = config._test_guild;
+const queue = new Queue();
 
-const activities = [
-    "with translated stuff",
-    "with languages",
-    "with 1s and 0s"
-];
+const client = new Discord.Client({
+    intents: [Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILDS],
+    allowedMentions: {
+        repliedUser: false,
+    },
+});
 
-client.on('ready', () => {
+client.on("messageCreate", MessageHandler.messageCreate);
+
+client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    function newAct() {
-        // generate random number between 1 and list length.
+    const clientIcon = client.user.avatar_url
+        ? client.user.avatar_url
+        : "https://cdn.discordapp.com/embed/avatars/0.png";
 
+    EmbedBuilder.setDefault("footer", client.user.username);
+    EmbedBuilder.setDefault("footerIcon", clientIcon);
+    EmbedBuilder.setDefault("color", config.message_color);
+
+    MessageHandler.init(queue);
+
+    console.log("Registering commands...");
+    await CommandHandler.registerCommands(client, testGuild);
+    console.log("Commands registered");
+
+    function newAct() {
         const randomIndex = Math.floor(Math.random() * (activities.length - 1) + 1);
         const newActivity = activities[randomIndex];
 
@@ -27,84 +46,9 @@ client.on('ready', () => {
     setInterval(() => {
         newAct();
     }, 60000 * 30);
-
-});
-const filter = new (require('bad-words'))({ placeHolder: "\\*" });
-
-var q = [];
-
-var runner
-
-function starter() {
-    runner = setInterval(() => {
-        if (q.length > 0) {
-            q[0]();
-            q.shift();
-        }
-    }, 500);
-}
-starter();
-client.on('message', message => {
-    if (message.author.bot) return;
-    if (message) {
-        const mess = message.cleanContent;
-        if (mess.length < 6 || !mess.includes(' ')) {
-            return;
-        } else if (!mess.startsWith(prefix)) {
-
-
-            const L = LanguageDetect.detect(mess, 1);
-            console.log(L);
-            if (L.length > 0 && L[0].length > 0 && L[0][0] == 'english') return;
-            q.push(() => {
-                translate(mess, { to: "en" }).then(res => {
-                    if (res.from.language.iso == "en" || res.text.toLocaleLowerCase() == mess.toLocaleLowerCase()) return;
-                    const word = filter.clean(res.text)
-                    if (word.replace(/\\\*/g, "").trim().length < 1) return;
-                    message.lineReplyNoMention(word); // OUTPUT: You are amazing!
-                }).catch(err => {
-                    console.error(err);
-                    message.lineReplyNoMention("Transactional limit reached. Translate will be down for a minute"); // OUTPUT: You are amazing!
-                    clearInterval(runner)
-                    setTimeout(starter, 1000 * 60);
-                });
-            })
-
-        } else {
-            const args = mess.trim().split(/ +/g);
-            const cmd = args[0].slice(prefix.length).toLowerCase(); // case INsensitive, without prefix
-            args.shift();
-            if (cmd == 'info') {
-                return message.lineReplyNoMention('Thanks you ri1_ for the code used in the translate bot!');
-            }
-            if (cmd == 'help') {
-                return message.lineReplyNoMention(
-                    prefix + 'help: For this menu\n' +
-                    prefix + 'info: For info about the creator\n' +
-                    prefix + 'detect: Let me see if I can determine this strange set of data?\n'+
-                    prefix + "[language code]: to have me translate your text into that language"
-                );
-            }
-            if (cmd == 'detect') {
-                const r = LanguageDetect.detect(args.join(' '), 5);
-                var res = "Let's see what I think it is\n```\n";
-
-                r.forEach(L => {
-                    res += L[0] + ":" + Math.round(L[1] * 100.0) + "%\n"
-                })
-                res += "```"
-                return message.lineReplyNoMention(res);
-            }
-            const output = mess.replace(prefix + cmd, '');
-            translate(output, { to: cmd }).then(res => {
-                message.lineReplyNoMention(filter.clean(res.text)); // OUTPUT: You are amazing!
-            }).catch(err => {
-                console.error(err);
-            });
-        }
-    }
 });
 
+queue.start();
 
-
-client.login(require("./token.json").token);
+console.log("Logging in...");
+client.login(token);
