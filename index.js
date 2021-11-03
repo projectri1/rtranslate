@@ -10,6 +10,7 @@ const activities = config.activities;
 const doNotTranslate = config.do_not_translate;
 const targetLanguage = config.translate_to;
 const messages = config.messages;
+const icons = config.icons;
 const queue = new Queue();
 const displayNames = new Intl.DisplayNames(["en"], { type: "language" });
 const displayNamesTargetLanguage = new Intl.DisplayNames([targetLanguage], { type: "language" });
@@ -52,8 +53,8 @@ async function messageCreate(message) {
         const translatingMessage = Object.assign({}, defaultEmbed);
         translatingMessage.description = null;
         translatingMessage["author"] = {
-            icon_url: "https://imgur.com/lRWffj0.png",
-            name: "Translating...",
+            icon_url: icons.translating,
+            name: messages.translating,
         };
         const reply = message.reply(
             { embeds: [translatingMessage] },
@@ -102,7 +103,11 @@ async function messageCreate(message) {
     } catch (err) {
         console.error(err);
         const errorMessage = Object.assign({}, errorEmbed);
-        errorMessage.description = messages.limit_reached;
+        errorMessage.description = null;
+        errorMessage["author"] = {
+            icon_url: icons.translating,
+            name: messages.translating,
+        };
         message.reply(
             { embeds: [errorMessage] },
             {
