@@ -38,6 +38,17 @@ module.exports.MessageBuilder = class MessageBuilder {
         this.content = content;
         this.footer = footer;
         this.footerIcon = footerIcon;
+        this.fields = [];
+    }
+
+    /**
+     * Add a field to the embed
+     * @param {string} name The field name
+     * @param {any} value The field value
+     * @param {boolean} [inline] If it should be inline
+     */
+    addField(name, value, inline = false) {
+        this.fields.push({ name: name, value: value, inline: inline });
     }
 
     /**
@@ -56,6 +67,7 @@ module.exports.MessageBuilder = class MessageBuilder {
                 icon_url: this.footerIcon ? this.footerIcon : defaults.footerIcon,
                 text: this.footer ? defaults.footer + " — " + this.footer : defaults.footer,
             },
+            fields: this.fields,
         };
     }
 };
@@ -89,6 +101,10 @@ module.exports.translatedMessage = (translatedText, sourceLanguage, targetLangua
  * Returns a limit reached message embed
  * @returns {object} Returns the embed object
  */
-module.exports.limitReached = () => {
-    return new this.MessageBuilder(15208739, icons.limit_reached, messages.limit_reached).build();
+module.exports.errorMessage = (errorMessage) => {
+    return new this.MessageBuilder(
+        15208739,
+        icons.limit_reached,
+        errorMessage ? errorMessage : messages.limit_reached
+    ).build();
 };
