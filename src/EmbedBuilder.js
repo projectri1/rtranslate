@@ -12,6 +12,11 @@ const defaults = {
     footerIcon: null,
 };
 
+/**
+ * Set some default embed values
+ * @param {"color" | "icon" | "title" | "content" | "footer" | "footerIcon"} property The property name
+ * @param {any} value The value that fits to that property
+ */
 module.exports.setDefault = (property, value) => {
     defaults[property] = value;
 };
