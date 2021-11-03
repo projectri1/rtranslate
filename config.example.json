@@ -7,5 +7,9 @@
         "translating": "⌛ Translating...",
         "limit_reached": "⚠ Transactional limit reached. Translate will be down for a minute."
     },
+    "icons": {
+        "translating": "https://imgur.com/lRWffj0.png",
+        "limit_reached": "https://imgur.com/wLCgDtQ.png"
+    },
     "token": "-- YOUR DISCORD BOT TOKEN --"
 }
