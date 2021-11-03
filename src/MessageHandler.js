@@ -45,7 +45,7 @@ module.exports = {
             const reply = message.reply({ embeds: [translatingMessage] });
 
             queue.add(async () => {
-                console.log("[Message " + message.id + "] Getting translated...");
+                console.log("[Message " + message.id + "] Getting translation...");
                 const res = await translate(content, { to: targetLanguage });
 
                 await reply.then(async (replyMessage) => {
