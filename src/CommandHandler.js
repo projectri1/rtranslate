@@ -119,7 +119,7 @@ const commands = {
             await interaction.editReply({
                 embeds: [
                     EmbedBuilder.translatedMessage(
-                        res,
+                        res.text,
                         displayNamesTargetLanguage.of(res.from.language.iso),
                         displayNamesTargetLanguage.of(targetLang)
                     ),
