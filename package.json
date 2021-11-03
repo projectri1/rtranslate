@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "node index.js"
+        "dev": "nodemon",
+        "start": "node ."
     },
     "author": "ri1_",
     "license": "MIT",
@@ -13,5 +14,8 @@
         "bad-words": "^3.0.4",
         "discord.js": "^13.3.0",
         "languagedetect": "^2.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.14"
     }
 }
