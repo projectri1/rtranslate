@@ -9,7 +9,8 @@
     },
     "icons": {
         "translating": "https://imgur.com/lRWffj0.png",
-        "limit_reached": "https://imgur.com/wLCgDtQ.png"
+        "limit_reached": "https://imgur.com/wLCgDtQ.png",
+        "info": "https://imgur.com/EhK7ZFE.png"
     },
     "token": "-- YOUR DISCORD BOT TOKEN --"
 }
