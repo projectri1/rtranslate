@@ -11,7 +11,7 @@ $ git clone https://github.com/riensurgithub/rtranslate
 $ cd rtranslate
 ```
 ### Insert the token
-Replace your token with your real token generated on discord.dev
+Replace your_token with the token generated on [discord dev portal](https://discord.dev)
 ```bash
 # Install dependencies
 $ npm install @iamtraction/google-translate discord.js discord-reply
@@ -27,3 +27,8 @@ Thanks to :
 - [Hanro50](https://github.com/Hanro50) for adding reply
 - [me (ri1_)](https://github.com/riensurgithub) for initial bot
 - [Vitaliy Potapov](https://github.com/vitalets) for his [npm package](https://github.com/vitalets/google-translate-api)
+
+
+# Slash Commands Version
+
+If you want a version of rtranslate with Slash Commands (discord.js v13) check the [slash_commands](https://github.com/riensurgithub/rtranslate/tree/slash_commands) branch
