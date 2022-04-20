@@ -5,7 +5,7 @@
 ## Install
 ```bash
 # Clone this repository
-$ git clone https://github.com/riensurgithub/rtranslate
+$ git clone https://github.com/riensurgithub/rtranslate rtranslate
 
 # Go into the repository
 $ cd rtranslate
@@ -14,7 +14,7 @@ $ cd rtranslate
 Replace your_token with the token generated on [discord dev portal](https://discord.dev)
 ```bash
 # Install dependencies
-$ npm install @iamtraction/google-translate discord.js discord-reply
+$ npm install
 
 # Run the bot
 $ npm test
