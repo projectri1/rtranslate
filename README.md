@@ -2,6 +2,10 @@
 ### a Discord Translation Bot using google translate api
 ![Image](https://repository-images.githubusercontent.com/385170286/84817780-e2b4-11eb-9741-467b27ed1ab6)
 
+## Demo
+If you don't want to self heberg the bot, there is a demo (in english and no configurable)
+https://url.rien.tk/YHBT (This is the Slash Commands Version)
+
 ## Install
 ```bash
 # Clone this repository
