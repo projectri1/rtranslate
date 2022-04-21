@@ -1,6 +1,6 @@
 # RTranslate 
 ### a Discord Translation Bot using google translate api
-![Image](https://repository-images.githubusercontent.com/385170286/84817780-e2b4-11eb-9741-467b27ed1ab6)
+![Image](https://repository-images.githubusercontent.com/385170286/6383f1ac-70ed-48f1-ba4a-8baae0836b36)
 
 ## Demo
 If you don't want to self heberg the bot, there is a demo (in english and no configurable)
