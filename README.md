@@ -3,7 +3,7 @@
 ![Image](https://repository-images.githubusercontent.com/385170286/6383f1ac-70ed-48f1-ba4a-8baae0836b36)
 
 ## Demo
-If you don't want to self heberg the bot, there is a demo (in english and no configurable)
+if you don’t want to host the bot yourself, there is a demo (in english and no configurable)
 https://url.rien.tk/YHBT (This is the Slash Commands Version)
 
 ## Install
